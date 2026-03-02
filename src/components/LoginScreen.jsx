@@ -55,11 +55,14 @@ const LoginScreen = ({ onLogin }) => {
             } else {
                 // After register, automatically login
                 const loginBody = new URLSearchParams({ username, password });
-                const loginResponse = await fetch(`http://${hostname}:8000/token`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: loginBody,
-                });
+                const loginResponse = await fetch(
+                    "https://amd-automation-1.onrender.com/token",
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: loginBody,
+                    }
+                );
 
                 if (!loginResponse.ok) {
                     throw new Error('Registration successful but auto-login failed. Please sign in manually.');
