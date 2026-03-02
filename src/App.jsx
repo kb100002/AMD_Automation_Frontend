@@ -33,7 +33,7 @@ function App() {
 
     React.useEffect(() => {
         if (token) {
-            fetch(`http://${window.location.hostname}:8000/users/me`, {
+            fetch(`https://amd-automation-1.onrender.com/users/me`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             })
                 .then(res => {
@@ -105,13 +105,13 @@ function App() {
         }
 
         // Connect to WebSocket using native WebSocket API
-        const ws = new WebSocket(`ws://${window.location.hostname}:8000/ws/logs`);
+        const ws = new WebSocket(`wss://amd-automation-1.onrender.com/ws/logs`);
         wsRef.current = ws;
 
         ws.onopen = () => {
             addLog('Log stream connected.');
             // Trigger process via API
-            fetch(`http://${window.location.hostname}:8000${endpoint}`, {
+            fetch(`https://amd-automation-1.onrender.com${endpoint}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

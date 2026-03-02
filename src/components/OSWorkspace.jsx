@@ -178,7 +178,7 @@ const OSWorkspace = ({ osId, module, onBack, onSubmit, logs, result, errorMsg, i
         setIsAnalyzing(true);
         setAiAnalysis(null);
         try {
-            const response = await fetch(`http://${window.location.hostname}:8000/analyze-logs`, {
+            const response = await fetch(`https://amd-automation-1.onrender.com/analyze-logs`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -202,7 +202,7 @@ const OSWorkspace = ({ osId, module, onBack, onSubmit, logs, result, errorMsg, i
             return;
         }
         try {
-            const response = await fetch(`http://${window.location.hostname}:8000/cancel`, {
+            const response = await fetch(`https://amd-automation-1.onrender.com/cancel`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -472,7 +472,7 @@ const OSWorkspace = ({ osId, module, onBack, onSubmit, logs, result, errorMsg, i
                                 {isAnalyzing ? 'Analyzing...' : 'AI Analyze Logs'}
                             </button>
                             <button
-                                onClick={() => window.open(`http://${window.location.hostname}:8000/download-report`, '_blank')}
+                                onClick={() => window.open(`https://amd-automation-1.onrender.com/download-report`, '_blank')}
                                 style={{
                                     background: '#28a745',
                                     border: 'none',
@@ -504,7 +504,7 @@ const OSWorkspace = ({ osId, module, onBack, onSubmit, logs, result, errorMsg, i
                                         📊 Results UI
                                     </button>
                                     <button
-                                        onClick={() => window.open(`http://${window.location.hostname}:8000/benchmark-report-html`, '_blank')}
+                                        onClick={() => window.open(`https://amd-automation-1.onrender.com/benchmark-report-html`, '_blank')}
                                         disabled={isRunning || !result}
                                         style={{
                                             background: '#17a2b8',

@@ -47,7 +47,7 @@ const KernelCIMonitor = ({ onBack, selectedConnections = [], gitUrl, defaultBenc
 
     const fetchStatus = async () => {
         try {
-            const res = await fetch(`http://${window.location.hostname}:8000/ci/status`, {
+            const res = await fetch(`https://amd-automation-1.onrender.com/ci/status`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -98,7 +98,7 @@ const KernelCIMonitor = ({ onBack, selectedConnections = [], gitUrl, defaultBenc
     const handleStart = async (host) => {
         const finalConfig = getTargetConfig(host);
         try {
-            const res = await fetch(`http://${window.location.hostname}:8000/ci/start`, {
+            const res = await fetch(`https://amd-automation-1.onrender.com/ci/start`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -118,7 +118,7 @@ const KernelCIMonitor = ({ onBack, selectedConnections = [], gitUrl, defaultBenc
 
     const handleStop = async (host) => {
         try {
-            const res = await fetch(`http://${window.location.hostname}:8000/ci/stop?host=${host}`, {
+            const res = await fetch(`https://amd-automation-1.onrender.com/ci/stop?host=${host}`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -135,7 +135,7 @@ const KernelCIMonitor = ({ onBack, selectedConnections = [], gitUrl, defaultBenc
     const handleDownloadLogs = async () => {
         if (!selectedHost) return;
         try {
-            const res = await fetch(`http://${window.location.hostname}:8000/logs/${selectedHost}/download`, {
+            const res = await fetch(`https://amd-automation-1.onrender.com/logs/${selectedHost}/download`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {

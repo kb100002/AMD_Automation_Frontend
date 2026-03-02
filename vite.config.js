@@ -8,7 +8,7 @@ export default defineConfig({
         proxy: {
             '/api': 'https://amd-automation-1.onrender.com',
             '/ws': {
-                target: 'ws://localhost:8000',
+                target: 'wss://amd-automation-1.onrender.com',
                 ws: true
             }
         }

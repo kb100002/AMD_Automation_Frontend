@@ -15,7 +15,7 @@ const LoginScreen = ({ onLogin }) => {
 
         const endpoint = isLogin ? '/token' : '/register';
         const hostname = window.location.hostname;
-        const url = `http://${hostname}:8000${endpoint}`;
+        const url = `https://amd-automation-1.onrender.com${endpoint}`;
 
         try {
             const body = isLogin
