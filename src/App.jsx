@@ -9,6 +9,8 @@ import ConfigurationScreen from './components/ConfigurationScreen';
 import KernelCIMonitor from './components/KernelCIMonitor';
 
 import LoginScreen from './components/LoginScreen';
+import { API_BASE_URL, WS_BASE_URL } from './config';
+
 
 function App() {
     const [token, setToken] = useState(sessionStorage.getItem('token'));
@@ -33,7 +35,7 @@ function App() {
 
     React.useEffect(() => {
         if (token) {
-            fetch(`https://amd-automation-1.onrender.com/users/me`, {
+            fetch(`${API_BASE_URL}/users/me`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             })
                 .then(res => {
@@ -105,13 +107,15 @@ function App() {
         }
 
         // Connect to WebSocket using native WebSocket API
-        const ws = new WebSocket(`wss://amd-automation-1.onrender.com/ws/logs`);
+        const ws = new WebSocket(`${WS_BASE_URL}/ws/logs`);
+
         wsRef.current = ws;
 
         ws.onopen = () => {
             addLog('Log stream connected.');
             // Trigger process via API
-            fetch(`https://amd-automation-1.onrender.com${endpoint}`, {
+            fetch(`${API_BASE_URL}${endpoint}`, {
+
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../config';
+
 
 const ValidationForm = ({ module, onSubmit, onBack }) => {
     const [formData, setFormData] = useState({
@@ -18,7 +20,7 @@ const ValidationForm = ({ module, onSubmit, onBack }) => {
         // Fetch kernel types on mount
         const fetchTypes = async () => {
             try {
-                const response = await fetch('https://amd-automation-1.onrender.com/kernel-types');
+                const response = await fetch(`${API_BASE_URL}/kernel-types`);
                 const types = await response.json();
                 setKernelTypes(types);
                 // Set default if available
@@ -37,7 +39,7 @@ const ValidationForm = ({ module, onSubmit, onBack }) => {
         const fetchVersions = async () => {
             if (!formData.kernelType) return;
             try {
-                const response = await fetch(`https://amd-automation-1.onrender.com/kernel-versions/${formData.kernelType}`);
+                const response = await fetch(`${API_BASE_URL}/kernel-versions/${formData.kernelType}`);
                 const versions = await response.json();
                 setKernelVersions(versions);
                 // Set default version if available

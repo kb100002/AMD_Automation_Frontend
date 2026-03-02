@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../config';
+
 
 const ConnectionManager = ({ onSelectConnections, selectedConnectionIds = [], token, onLogout }) => {
     const [connections, setConnections] = useState([]);
@@ -16,7 +18,7 @@ const ConnectionManager = ({ onSelectConnections, selectedConnectionIds = [], to
 
     const fetchConnections = async () => {
         try {
-            const response = await fetch('https://amd-automation-1.onrender.com/connections', {
+            const response = await fetch(`${API_BASE_URL}/connections`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (response.ok) {
@@ -37,7 +39,7 @@ const ConnectionManager = ({ onSelectConnections, selectedConnectionIds = [], to
     const handleSave = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('https://amd-automation-1.onrender.com/connections', {
+            const response = await fetch(`${API_BASE_URL}/connections`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -64,7 +66,7 @@ const ConnectionManager = ({ onSelectConnections, selectedConnectionIds = [], to
         if (!window.confirm(`Delete connection ${ip}?`)) return;
 
         try {
-            const response = await fetch(`https://amd-automation-1.onrender.com/connections/${ip}`, {
+            const response = await fetch(`${API_BASE_URL}/connections/${ip}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

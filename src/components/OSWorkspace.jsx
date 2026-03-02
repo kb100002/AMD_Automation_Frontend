@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import LogTerminal from './LogTerminal';
 import BenchmarkResults from './BenchmarkResults';
 import { PTS_BENCHMARKS } from '../data/benchmarks';
+import { API_BASE_URL } from '../config';
+
 
 const OSWorkspace = ({ osId, module, onBack, onSubmit, logs, result, errorMsg, isRunning, initialValidations, initialValidationDelayDays, initialBenchmarkName, initialConnection, notificationEmails, targetPassCount, executeWithLogs, token, onLogout }) => {
     const [formData, setFormData] = useState({
@@ -52,7 +54,7 @@ const OSWorkspace = ({ osId, module, onBack, onSubmit, logs, result, errorMsg, i
         // Fetch kernel types on mount
         const fetchTypes = async () => {
             try {
-                const response = await fetch('https://amd-automation-1.onrender.com/kernel-types', {
+                const response = await fetch(`${API_BASE_URL}/kernel-types`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (response.ok) {
@@ -178,7 +180,7 @@ const OSWorkspace = ({ osId, module, onBack, onSubmit, logs, result, errorMsg, i
         setIsAnalyzing(true);
         setAiAnalysis(null);
         try {
-            const response = await fetch(`https://amd-automation-1.onrender.com/analyze-logs`, {
+            const response = await fetch(`${API_BASE_URL}/analyze-logs`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -202,7 +204,7 @@ const OSWorkspace = ({ osId, module, onBack, onSubmit, logs, result, errorMsg, i
             return;
         }
         try {
-            const response = await fetch(`https://amd-automation-1.onrender.com/cancel`, {
+            const response = await fetch(`${API_BASE_URL}/cancel`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -472,7 +474,7 @@ const OSWorkspace = ({ osId, module, onBack, onSubmit, logs, result, errorMsg, i
                                 {isAnalyzing ? 'Analyzing...' : 'AI Analyze Logs'}
                             </button>
                             <button
-                                onClick={() => window.open(`https://amd-automation-1.onrender.com/download-report`, '_blank')}
+                                onClick={() => window.open(`${API_BASE_URL}/download-report`, '_blank')}
                                 style={{
                                     background: '#28a745',
                                     border: 'none',
@@ -504,7 +506,7 @@ const OSWorkspace = ({ osId, module, onBack, onSubmit, logs, result, errorMsg, i
                                         📊 Results UI
                                     </button>
                                     <button
-                                        onClick={() => window.open(`https://amd-automation-1.onrender.com/benchmark-report-html`, '_blank')}
+                                        onClick={() => window.open(`${API_BASE_URL}/benchmark-report-html`, '_blank')}
                                         disabled={isRunning || !result}
                                         style={{
                                             background: '#17a2b8',

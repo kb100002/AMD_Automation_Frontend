@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { API_BASE_URL } from '../config';
+
 
 const LoginScreen = ({ onLogin }) => {
     const [isLogin, setIsLogin] = useState(true);
@@ -14,8 +16,7 @@ const LoginScreen = ({ onLogin }) => {
         setLoading(true);
 
         const endpoint = isLogin ? '/token' : '/register';
-        const hostname = window.location.hostname;
-        const url = `https://amd-automation-1.onrender.com${endpoint}`;
+        const url = `${API_BASE_URL}${endpoint}`;
 
         try {
             const body = isLogin
@@ -56,7 +57,7 @@ const LoginScreen = ({ onLogin }) => {
                 // After register, automatically login
                 const loginBody = new URLSearchParams({ username, password });
                 const loginResponse = await fetch(
-                    "https://amd-automation-1.onrender.com/token",
+                    `${API_BASE_URL}/token`,
                     {
                         method: "POST",
                         headers: { "Content-Type": "application/x-www-form-urlencoded" },

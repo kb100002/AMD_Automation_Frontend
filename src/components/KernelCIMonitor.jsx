@@ -1,6 +1,8 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { PTS_BENCHMARKS } from '../data/benchmarks';
+import { API_BASE_URL } from '../config';
+
 
 const KernelCIMonitor = ({ onBack, selectedConnections = [], gitUrl, defaultBenchmark, defaultValidations, defaultEmails, defaultPassCount, defaultDelay, token, onLogout }) => {
     // allStatus maps host -> { is_running, status, logs, config }
@@ -47,7 +49,7 @@ const KernelCIMonitor = ({ onBack, selectedConnections = [], gitUrl, defaultBenc
 
     const fetchStatus = async () => {
         try {
-            const res = await fetch(`https://amd-automation-1.onrender.com/ci/status`, {
+            const res = await fetch(`${API_BASE_URL}/ci/status`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -98,7 +100,7 @@ const KernelCIMonitor = ({ onBack, selectedConnections = [], gitUrl, defaultBenc
     const handleStart = async (host) => {
         const finalConfig = getTargetConfig(host);
         try {
-            const res = await fetch(`https://amd-automation-1.onrender.com/ci/start`, {
+            const res = await fetch(`${API_BASE_URL}/ci/start`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -118,7 +120,7 @@ const KernelCIMonitor = ({ onBack, selectedConnections = [], gitUrl, defaultBenc
 
     const handleStop = async (host) => {
         try {
-            const res = await fetch(`https://amd-automation-1.onrender.com/ci/stop?host=${host}`, {
+            const res = await fetch(`${API_BASE_URL}/ci/stop?host=${host}`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -135,7 +137,7 @@ const KernelCIMonitor = ({ onBack, selectedConnections = [], gitUrl, defaultBenc
     const handleDownloadLogs = async () => {
         if (!selectedHost) return;
         try {
-            const res = await fetch(`https://amd-automation-1.onrender.com/logs/${selectedHost}/download`, {
+            const res = await fetch(`${API_BASE_URL}/logs/${selectedHost}/download`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {

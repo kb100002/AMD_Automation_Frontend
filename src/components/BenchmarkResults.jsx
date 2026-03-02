@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../config';
+
 
 const BenchmarkResults = ({ onClose, token }) => {
     const [results, setResults] = useState(null);
@@ -10,7 +12,7 @@ const BenchmarkResults = ({ onClose, token }) => {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch('https://amd-automation-1.onrender.com/benchmark-results', {
+            const response = await fetch(`${API_BASE_URL}/benchmark-results`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();
