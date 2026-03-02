@@ -13,5 +13,5 @@ export default defineConfig({
             }
         }
     },
-    base: '/AMD_Automation/',
+    base: '/AMD_Automation_Frontend/',
 })
