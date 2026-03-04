@@ -23,6 +23,7 @@ const KernelCIMonitor = ({ onBack, selectedConnections = [], gitUrl, defaultBenc
     const [benchmarkSearch, setBenchmarkSearch] = useState('');
 
     const logsEndRef = useRef(null);
+    const pollIntervalRef = useRef(null);
 
     useEffect(() => {
         if (selectedConnections.length === 1 && !selectedHost) {
@@ -30,24 +31,12 @@ const KernelCIMonitor = ({ onBack, selectedConnections = [], gitUrl, defaultBenc
         }
     }, [selectedConnections, selectedHost]);
 
-    // Auto-start monitoring for all selected connections on mount
-    const hasStartedRef = useRef(false);
-    useEffect(() => {
-        if (!hasStartedRef.current && selectedConnections.length > 0) {
-            hasStartedRef.current = true;
-            // Small delay to allow UI to settle, though not strictly necessary
-            setTimeout(() => {
-                selectedConnections.forEach(conn => {
-                    handleStart(conn.remote_ip);
-                });
-            }, 100);
-        }
-    }, [selectedConnections]);
+
 
     useEffect(() => {
         fetchStatus();
-        const interval = setInterval(fetchStatus, 2000);
-        return () => clearInterval(interval);
+        pollIntervalRef.current = setInterval(fetchStatus, 2000);
+        return () => clearInterval(pollIntervalRef.current);
     }, []);
 
     useEffect(() => {
@@ -139,7 +128,12 @@ const KernelCIMonitor = ({ onBack, selectedConnections = [], gitUrl, defaultBenc
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
-                fetchStatus();
+                // Stop the /ci/status polling
+                if (pollIntervalRef.current) {
+                    clearInterval(pollIntervalRef.current);
+                    pollIntervalRef.current = null;
+                }
+                fetchStatus(); // One final fetch to update UI
             } else if (res.status === 401 && onLogout) {
                 onLogout();
             }
