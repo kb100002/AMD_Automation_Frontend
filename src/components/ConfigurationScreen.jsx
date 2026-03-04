@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ConnectionManager from './ConnectionManager';
 import { PTS_BENCHMARKS } from '../data/benchmarks';
 
-const ConfigurationScreen = ({ onContinue, onBack, onLaunchCI, token, onLogout }) => {
+const ConfigurationScreen = ({ onContinue, onBack, onLaunchCI, user, token, onLogout }) => {
     const [activeTab, setActiveTab] = useState('connections'); // 'connections' | 'validations'
     const [selectedConnections, setSelectedConnections] = useState([]);
     const [selectedGitUrl, setSelectedGitUrl] = useState('https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git');
@@ -98,6 +98,7 @@ const ConfigurationScreen = ({ onContinue, onBack, onLaunchCI, token, onLogout }
                                 setSelectedConnections(conns);
                             }}
                             selectedConnectionIds={selectedConnections.map(c => c.remote_ip || c)}
+                            currentUsername={user?.username}
                             token={token}
                             onLogout={onLogout}
                         />
@@ -241,6 +242,12 @@ const ConfigurationScreen = ({ onContinue, onBack, onLaunchCI, token, onLogout }
                                 <div style={{ fontSize: '0.75rem', color: '#666', marginTop: '0.4rem' }}>
                                     The monitor will automatically stop after reaching this many successful validations.
                                 </div>
+                            </div>
+
+                            <div style={{ padding: '1rem', background: 'rgba(255, 204, 0, 0.1)', border: '1px solid #ffcc00', borderRadius: '4px', marginBottom: '1.5rem' }}>
+                                <p style={{ margin: 0, fontSize: '0.9rem', color: '#ffcc00', lineHeight: '1.4' }}>
+                                    ⚠️ <strong>Caution:</strong> Please do not refresh the page. Once you start the CI, you cannot end till validation is completes.
+                                </p>
                             </div>
                         </div>
                     </div>

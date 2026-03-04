@@ -70,6 +70,8 @@ const ValidationSelection = ({ onContinue, onBack }) => {
                 </label>
             </div>
 
+
+
             <div style={{ display: 'flex', gap: '1rem', justifyContent: 'space-between' }}>
                 <button onClick={onBack} className="btn-secondary" style={{ flex: 1 }}>Back</button>
                 <button

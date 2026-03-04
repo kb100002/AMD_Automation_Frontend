@@ -9,6 +9,15 @@ const KernelCIMonitor = ({ onBack, selectedConnections = [], gitUrl, defaultBenc
     const [allStatus, setAllStatus] = useState({});
     const [selectedHost, setSelectedHost] = useState(null);
 
+    const DISABLE_STOP_STATUSES = [
+        "Building Kernel",
+        "Installing Kernel",
+        "Updating Bootloader",
+        "Checking dmesg",
+        "Verifying Reboot",
+        "Running Validation"
+    ];
+
     // Per-host local config overrides (before starting)
     const [localConfigs, setLocalConfigs] = useState({});
     const [benchmarkSearch, setBenchmarkSearch] = useState('');
@@ -119,6 +128,11 @@ const KernelCIMonitor = ({ onBack, selectedConnections = [], gitUrl, defaultBenc
     };
 
     const handleStop = async (host) => {
+        const hostStatus = allStatus[host]?.status;
+        if (DISABLE_STOP_STATUSES.includes(hostStatus)) {
+            console.warn(`Cannot stop CI for ${host} while in status: ${hostStatus}`);
+            return;
+        }
         try {
             const res = await fetch(`${API_BASE_URL}/ci/stop?host=${host}`, {
                 method: 'POST',
@@ -159,6 +173,7 @@ const KernelCIMonitor = ({ onBack, selectedConnections = [], gitUrl, defaultBenc
 
     const currentStatus = allStatus[selectedHost] || { is_running: false, status: 'Idle', logs: [], analysis_results: {} };
     const currentConfig = getTargetConfig(selectedHost);
+    const isStopDisabled = DISABLE_STOP_STATUSES.includes(currentStatus.status);
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', flex: 1, gap: '1rem', color: '#fff', overflow: 'hidden' }}>
@@ -196,7 +211,16 @@ const KernelCIMonitor = ({ onBack, selectedConnections = [], gitUrl, defaultBenc
 
                     <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
                         <button onClick={() => selectedConnections.forEach(c => handleStart(c.remote_ip))} style={{ ...miniButtonStyle, background: '#27C93F' }}>Start All</button>
-                        <button onClick={() => selectedConnections.forEach(c => handleStop(c.remote_ip))} style={{ ...miniButtonStyle, background: '#dc3545' }}>Stop All</button>
+                        <button
+                            onClick={() => selectedConnections.forEach(c => {
+                                if (!DISABLE_STOP_STATUSES.includes(allStatus[c.remote_ip]?.status)) {
+                                    handleStop(c.remote_ip);
+                                }
+                            })}
+                            style={{ ...miniButtonStyle, background: '#dc3545' }}
+                        >
+                            Stop All
+                        </button>
                     </div>
 
                     <h4 style={{ margin: '0.5rem 0 0.5rem 0', color: '#aaa', fontSize: '0.8rem', textTransform: 'uppercase' }}>Remote Systems</h4>
@@ -326,9 +350,26 @@ const KernelCIMonitor = ({ onBack, selectedConnections = [], gitUrl, defaultBenc
                                 </div>
                             )}
 
+                            <div style={{ padding: '0.8rem', background: 'rgba(255, 204, 0, 0.1)', border: '1px solid #ffcc00', borderRadius: '4px', marginBottom: '1rem' }}>
+                                <p style={{ margin: 0, fontSize: '0.8rem', color: '#ffcc00', lineHeight: '1.4' }}>
+                                    ⚠️ <strong>Caution:</strong> Please do not refresh the page. Once you start the CI, you cannot end it after the kernel build starts until validation is complete.
+                                </p>
+                            </div>
+
                             <div style={{ marginTop: 'auto' }}>
                                 {currentStatus.is_running ? (
-                                    <button onClick={() => handleStop(selectedHost)} style={stopButtonStyle}>Stop Monitor</button>
+                                    <button
+                                        onClick={() => handleStop(selectedHost)}
+                                        style={{
+                                            ...stopButtonStyle,
+                                            opacity: isStopDisabled ? 0.5 : 1,
+                                            cursor: isStopDisabled ? 'not-allowed' : 'pointer'
+                                        }}
+                                        disabled={isStopDisabled}
+                                        title={isStopDisabled ? "Cannot stop once kernel building starts" : "Stop Monitor"}
+                                    >
+                                        Stop Monitor
+                                    </button>
                                 ) : (
                                     <button onClick={() => handleStart(selectedHost)} style={startButtonStyle}>Start Monitoring</button>
                                 )}
